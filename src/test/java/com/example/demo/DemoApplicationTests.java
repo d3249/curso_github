@@ -31,7 +31,6 @@ class DemoApplicationTests {
                 .statusCode(is(HttpStatus.OK.value()))
                 .and()
                 .body("respuesta", is(equalTo("Hola Juan")));
-
     }
 
 }
