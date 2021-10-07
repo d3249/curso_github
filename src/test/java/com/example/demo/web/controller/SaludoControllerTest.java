@@ -1,8 +1,7 @@
-package com.example.demo.web;
+package com.example.demo.web.controller;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class SaludoControllerTest {
 
@@ -12,7 +11,7 @@ class SaludoControllerTest {
     void adjuntaNombre() {
         var respuesta = sut.slaudar("Edgar");
 
-        assertThat(respuesta).isEqualTo("Hola Edgar");
+        Assertions.assertThat(respuesta.getRespuesta()).isEqualTo("Hola Edgar");
     }
 
     @Test
@@ -20,14 +19,14 @@ class SaludoControllerTest {
 
         var respuesta = sut.slaudar("");
 
-        assertThat(respuesta).isEqualTo("Hola Mundo");
+        Assertions.assertThat(respuesta.getRespuesta()).isEqualTo("Hola Mundo");
     }
 
     @Test
     void siSeMandaNullSeReemplazaConMundo() {
         var respuesta = sut.slaudar(null);
 
-        assertThat(respuesta).isEqualTo("Hola Mundo");
+        Assertions.assertThat(respuesta.getRespuesta()).isEqualTo("Hola Mundo");
     }
 
     @Test
@@ -35,6 +34,6 @@ class SaludoControllerTest {
 
         var respuesta = sut.slaudar("  Edgar  ");
 
-        assertThat(respuesta).isEqualTo("Hola Edgar");
+        Assertions.assertThat(respuesta.getRespuesta()).isEqualTo("Hola Edgar");
     }
 }
