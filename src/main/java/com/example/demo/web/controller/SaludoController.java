@@ -1,6 +1,6 @@
 package com.example.demo.web.controller;
 
-import com.example.demo.web.controller.dto.Respuesta;
+import com.example.demo.web.controller.dto.ServerResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +14,7 @@ public class SaludoController {
 
 
     @GetMapping("/{nombre}")
-    public Respuesta<String> slaudar(@PathVariable String nombre) {
+    public ServerResponse<String> slaudar(@PathVariable String nombre) {
 
         var nombreFinal = nombre;
 
@@ -22,7 +22,7 @@ public class SaludoController {
             nombreFinal = "Mundo";
 
 
-        return new Respuesta<>(format("Hola %s", nombreFinal.trim()));
+        return new ServerResponse<>(format("Hola %s", nombreFinal.trim()));
     }
 
 }

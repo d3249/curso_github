@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.Objects;
 
-public class Respuesta<T> {
+public class ServerResponse<T> {
     private final T respuesta;
 
     @JsonCreator
-    public Respuesta(T respuesta) {
+    public ServerResponse(T respuesta) {
         this.respuesta = respuesta;
     }
 
@@ -19,9 +19,9 @@ public class Respuesta<T> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Respuesta)) return false;
-        Respuesta<?> respuesta1 = (Respuesta<?>) o;
-        return Objects.equals(getRespuesta(), respuesta1.getRespuesta());
+        if (!(o instanceof ServerResponse)) return false;
+        ServerResponse<?> serverResponse1 = (ServerResponse<?>) o;
+        return Objects.equals(getRespuesta(), serverResponse1.getRespuesta());
     }
 
     @Override

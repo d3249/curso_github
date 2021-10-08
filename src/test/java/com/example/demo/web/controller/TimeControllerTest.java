@@ -4,6 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,10 +23,8 @@ class TimeControllerTest {
 
     @Test
     void producesTimeUTC() {
-        var expected = Instant.now();
+        var response = Instant.parse(sut.pedirHora().getRespuesta());
 
-        var response = sut.pedirHora();
-
-        assertThat(response.getRespuesta()).isCloseTo(expected, within(100, ChronoUnit.MILLIS));
+        assertThat(response).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS));
     }
 }
