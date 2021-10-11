@@ -10,6 +10,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 import static io.restassured.RestAssured.get;
@@ -67,6 +69,43 @@ class DemoApplicationTests {
         var expectedPattern = "^\\d{4}(-\\d{2}){2}T\\d{2}:\\d{2}:\\d{2}Z$";
 
         get("/time")
+                .then()
+                .assertThat()
+                .statusCode(is(HttpStatus.OK.value()))
+                .and()
+                .body("respuesta", matchesPattern(expectedPattern));
+
+    }
+
+    @Test
+    void zonedTime() {
+
+        TypeRef<ServerResponse<String>> responseType = new TypeRef<>() {
+        };
+
+
+        var response = get("/time/America/Mexico_City")
+                .then()
+                .assertThat()
+                .statusCode(is(HttpStatus.OK.value()))
+                .and()
+                .extract()
+                .body()
+                .as(responseType);
+
+        var responseTime = OffsetDateTime.parse(response.getRespuesta());
+
+        assertThat(responseTime).isCloseTo(OffsetDateTime.now(ZoneId.of("America/Mexico_City")), within(1, ChronoUnit.SECONDS));
+    }
+
+
+    @Test
+    void truncatesTimeToSecondsZoned() {
+
+
+        var expectedPattern = "^\\d{4}(-\\d{2}){2}T\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}$";
+
+        get("/time/Asia/Tokyo")
                 .then()
                 .assertThat()
                 .statusCode(is(HttpStatus.OK.value()))
