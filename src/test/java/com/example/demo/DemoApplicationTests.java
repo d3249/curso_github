@@ -113,4 +113,13 @@ class DemoApplicationTests {
                 .body("respuesta", matchesPattern(expectedPattern));
 
     }
+
+    @Test
+    void responde404ParaZonaNoEncontrada() {
+
+        get("/time/No/Existe")
+                .then()
+                .assertThat()
+                .statusCode(is(HttpStatus.NOT_FOUND.value()));
+    }
 }
