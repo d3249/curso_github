@@ -4,9 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,5 +25,12 @@ class TimeControllerTest {
         var response = Instant.parse(sut.pedirHora().getRespuesta());
 
         assertThat(response).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS));
+    }
+
+    @Test
+    void producesTimeWithTimeZone() {
+        var response = OffsetDateTime.parse(sut.pedirHora("America", "Mexico_City").getRespuesta());
+
+        assertThat(response).isCloseTo(OffsetDateTime.now(ZoneId.of("America/Mexico_City")), within(1, ChronoUnit.SECONDS));
     }
 }
