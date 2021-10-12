@@ -24,8 +24,8 @@ public class SaludoController {
             nombreFinal = "Mundo";
         } else {
 
-            var firstLetter = nombre.substring(0, 1);
-            var rest = nombre.substring(1);
+            var firstLetter = nombre.trim().substring(0, 1);
+            var rest = nombre.trim().substring(1);
 
             var stringBuilder = new StringBuilder(firstLetter.toUpperCase(Locale.ROOT));
 
@@ -36,7 +36,7 @@ public class SaludoController {
         }
 
 
-        return new ServerResponse<>(format("Hola %s", nombreFinal.trim()));
+        return new ServerResponse<>(format("Hola %s", nombreFinal));
     }
 
 }
