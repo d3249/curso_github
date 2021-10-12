@@ -122,4 +122,15 @@ class DemoApplicationTests {
                 .assertThat()
                 .statusCode(is(HttpStatus.NOT_FOUND.value()));
     }
+
+    @Test
+    void cambiaAMyusculaLaPrimeraLetraDelNombreYElRestoAMinusculas(){
+
+        get("/hola/jUAN")
+                .then()
+                .assertThat()
+                .statusCode(is(HttpStatus.OK.value()))
+                .and()
+                .body("respuesta", is(equalTo("Hola Juan")));
+    }
 }
