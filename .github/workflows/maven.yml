@@ -40,7 +40,7 @@ jobs:
           subject: GitHub build exitoso
           to: edgar.ramos.dev@gmail.com
           from: Edgar Ramos
-          secure: true
+          secure: false
           body: El build del repositorio ${{github.repository}} fue exitoso
           reply_to: edgar.ramos@mozcalti.com
           ignore_cert: true
