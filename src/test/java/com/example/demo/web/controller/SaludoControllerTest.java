@@ -1,39 +1,40 @@
 package com.example.demo.web.controller;
 
+import com.example.demo.service.SaludoService;
+import com.example.demo.web.controller.dto.ServerResponse;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 
 class SaludoControllerTest {
 
-    private SaludoController sut = new SaludoController();
+
+    @Mock
+    private SaludoService service;
+
+    @InjectMocks
+    private SaludoController sut;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
-    void adjuntaNombre() {
+    void respondeConServerResponseString() {
+
+        given(service.saludar(anyString())).willAnswer(context -> context.getArgument(0));
+
         var respuesta = sut.slaudar("Edgar");
 
-        Assertions.assertThat(respuesta.getRespuesta()).isEqualTo("Hola Edgar");
+        Assertions.assertThat(respuesta).isInstanceOf(ServerResponse.class);
+
     }
 
-    @Test
-    void siSeMandaCadenaVaciaReemplazaConMundo() {
-
-        var respuesta = sut.slaudar("");
-
-        Assertions.assertThat(respuesta.getRespuesta()).isEqualTo("Hola Mundo");
-    }
-
-    @Test
-    void siSeMandaNullSeReemplazaConMundo() {
-        var respuesta = sut.slaudar(null);
-
-        Assertions.assertThat(respuesta.getRespuesta()).isEqualTo("Hola Mundo");
-    }
-
-    @Test
-    void seEliminanEspaciosAlRededor() {
-
-        var respuesta = sut.slaudar("  Edgar  ");
-
-        Assertions.assertThat(respuesta.getRespuesta()).isEqualTo("Hola Edgar");
-    }
 }

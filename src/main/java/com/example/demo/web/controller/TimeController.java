@@ -1,6 +1,7 @@
 package com.example.demo.web.controller;
 
 import com.example.demo.ZoneNameException;
+import com.example.demo.service.TiempoService;
 import com.example.demo.web.controller.dto.ServerResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,30 +19,22 @@ import java.time.zone.ZoneRulesException;
 @RequestMapping("/time")
 public class TimeController {
 
+    private final TiempoService service;
+
+    public TimeController(TiempoService service) {
+        this.service = service;
+    }
+
     @GetMapping("")
-    public ServerResponse<String> pedirHora() {
-        return new ServerResponse<>(LocalDateTime.now(ZoneId.of("UTC"))
-                .truncatedTo(ChronoUnit.SECONDS)
-                .format(DateTimeFormatter.ISO_DATE_TIME) + "Z");
+    public ServerResponse<OffsetDateTime> pedirHora() {
+        return new ServerResponse<>(service.time());
     }
 
     @GetMapping("/{region}/{zona}")
-    public ServerResponse<String> pedirHora(@PathVariable String region, @PathVariable String zona) {
+    public ServerResponse<OffsetDateTime> pedirHora(@PathVariable String region, @PathVariable String zona) {
 
         var zoneName = String.format("%s/%s", region, zona);
 
-        ZoneId zoneId = null;
-
-        try {
-            zoneId = ZoneId.of(zoneName);
-        } catch (ZoneRulesException e) {
-            throw new ZoneNameException(String.format("No se encontró la zona con nombre [%s]", zoneName));
-        }
-
-        var content = OffsetDateTime.now(zoneId)
-                .truncatedTo(ChronoUnit.SECONDS)
-                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-
-        return new ServerResponse<>(content);
+        return new ServerResponse<>(service.time(zoneName));
     }
 }

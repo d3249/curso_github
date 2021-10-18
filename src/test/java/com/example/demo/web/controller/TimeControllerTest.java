@@ -1,47 +1,49 @@
 package com.example.demo.web.controller;
 
-import com.example.demo.ZoneNameException;
-import org.junit.jupiter.api.Assertions;
+import com.example.demo.service.TiempoService;
+import com.example.demo.web.controller.dto.ServerResponse;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.*;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 class TimeControllerTest {
 
+    @Mock
+    private TiempoService service;
+
+    @InjectMocks
     private TimeController sut;
 
     @BeforeEach
     void setUp() {
-        sut = new TimeController();
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void producesTimeUTC() {
-        var response = Instant.parse(sut.pedirHora().getRespuesta());
+    void formaCorrectamenteLaZona() {
 
-        assertThat(response).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS));
+        given(service.time("zona/region")).willReturn(OffsetDateTime.now());
+
+        sut.pedirHora("zona", "region");
+
+        verify(service).time("zona/region");
     }
 
     @Test
-    void producesTimeWithTimeZone() {
-        var response = OffsetDateTime.parse(sut.pedirHora("America", "Mexico_City").getRespuesta());
+    void respondeConServerResponse() {
 
-        assertThat(response).isCloseTo(OffsetDateTime.now(ZoneId.of("America/Mexico_City")), within(1, ChronoUnit.SECONDS));
-    }
+        given(service.time("zona/region")).willReturn(OffsetDateTime.now());
 
-    @Test
-    void lanzaExcepcionCorrectaSiNoExisteLaZona() {
-        ZoneNameException exception = assertThrows(ZoneNameException.class, () -> sut.pedirHora("una", "zona"));
+        var result = sut.pedirHora("zona", "region");
 
-        assertThat(exception.getMessage()).contains("No se encontró la zona con nombre [una/zona]");
-
+        assertThat(result).isInstanceOf(ServerResponse.class);
 
     }
 }
